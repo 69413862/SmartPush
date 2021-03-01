@@ -519,7 +519,13 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (message.length>0) {
-            NSDictionary *attributes = @{NSForegroundColorAttributeName:warning?[NSColor redColor]:[NSColor blackColor] , NSFontAttributeName: [NSFont systemFontOfSize:12]};
+            NSColor *color = [NSColor new];
+            if (@available(macOS 10.13, *)) {
+                color = [NSColor colorNamed:@"text"];
+            } else {
+                color = [NSColor textColor];
+            }
+            NSDictionary *attributes = @{NSForegroundColorAttributeName:warning?[NSColor redColor]:color , NSFontAttributeName: [NSFont systemFontOfSize:12]};
             NSAttributedString *string = [[NSAttributedString alloc] initWithString:message attributes:attributes];
             [self.logTextView.textStorage appendAttributedString:string];
             [self.logTextView.textStorage.mutableString appendString:@"\n"];
